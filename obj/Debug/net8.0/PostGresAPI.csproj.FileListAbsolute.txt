@@ -103,3 +103,4 @@
 /home/sanguine/Documents/PostGresAPI/obj/Debug/net8.0/PostGresAPI.pdb
 /home/sanguine/Documents/PostGresAPI/obj/Debug/net8.0/PostGresAPI.genruntimeconfig.cache
 /home/sanguine/Documents/PostGresAPI/obj/Debug/net8.0/ref/PostGresAPI.dll
+/home/sanguine/Documents/PostGresAPI/obj/Debug/net8.0/PostGresAPI.sourcelink.json
