@@ -1,9 +1,10 @@
+namespace PostGresAPI.Controllers;
 using Microsoft.AspNetCore.Mvc;
 using PostGresAPI.DTOS;
 using PostGresAPI.Models;
 using PostGresAPI.Repositories;
 
-namespace PostGresAPI.Controllers;
+
 
 [ApiController]
 [Route("api/[controller]")]
@@ -27,10 +28,11 @@ public class StudentsController : Controller
     [HttpGet("{id}")]
     public IActionResult GetById(int id)
     {
-        if (_studentRepository.GetById(id) == null)
+        var studentId = _studentRepository.GetById(id);
+        if (studentId == null)
             return NotFound();
         
-        return Ok(_studentRepository.GetById(id));
+        return Ok(studentId);
     }
     
     [HttpPost]
