@@ -15,8 +15,11 @@ public class ApplicationDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Teacher>()
-            .HasOne(t => t.Subject)
-            .WithOne(s => s.Teacher);
+            .HasOne(t => t.SubjectId)
+            .WithOne(t => t.Teacher)
+            .HasForeignKey<Subject>(t => t.Id)  // Assuming you have TeacherId as the foreign key
+            .IsRequired(false);
+
     }
 }  
 

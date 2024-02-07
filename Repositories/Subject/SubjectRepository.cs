@@ -16,6 +16,7 @@ public class SubjectRepository : ISubjectRepository
     
     public IEnumerable<Subject> GetAll()
     {
+        
         return _applicationDbContext.Subjects.ToList();
     }
 
@@ -25,25 +26,36 @@ public class SubjectRepository : ISubjectRepository
         
     }
 
-    public Subject Create(SubjectDTO studentDto, Teacher teacher)
+    public Subject Create(SubjectDTO subjectDTO)
     {
         long generateId = _applicationDbContext.Subjects.LongCount() + 1;
+        var teacher =  _applicationDbContext.Teachers.Find(subjectDTO.teacherId);
+Console.WriteLine(teacher);
+        if (teacher == null)
+        {
+            throw new Exception("Teacher not found");
+        }
+
         var subject = new Subject()
         {
             Id = (int)generateId,
-            Name = studentDto.Name,
-            TeacherId = teacher.Id, 
+            Name = subjectDTO.Name,
+            Teacher = teacher,
         };
 
-        _applicationDbContext.Subjects.AddAsync(subject);
-        _applicationDbContext.SaveChangesAsync();
+        
+
+     _applicationDbContext.Subjects.Add(subject);
+         _applicationDbContext.SaveChanges();
 
         return subject;
     }
 
+
     public Subject Update(Subject subject)
     {
         var existingSubject = _applicationDbContext.Subjects.Find(subject.Id);
+        
         existingSubject.Name = subject.Name;
 
         _applicationDbContext.SaveChangesAsync();

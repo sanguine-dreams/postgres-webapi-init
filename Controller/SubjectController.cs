@@ -37,7 +37,7 @@ public class SubjectController : Controller
     {
         if (string.IsNullOrEmpty(subjectDto.Name?.Trim()))
             return BadRequest(error: "Invalid subject data.");
-        var createdSubject = _subjectRepository.Create(subjectDto);
+        var createdSubject =  _subjectRepository.Create(subjectDto);
 
         return CreatedAtAction(nameof(GetById), new { id = createdSubject.Id }, createdSubject); 
     }
