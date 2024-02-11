@@ -15,15 +15,27 @@ public class TeacherRepository : ITeacherRepository
         _applicationDbContext = context;
     }
 
-    public IEnumerable<Teacher> GetAll()
+    public IEnumerable<ReturnTeacherDTO> GetAll()
     {
-        return _applicationDbContext.Teachers.ToList();
+        var teachers = _applicationDbContext.Teachers.Select(
+            x => new ReturnTeacherDTO()
+            {
+                Name = x.Name,
+                Subject = x.Subject.Name
+            });
+        return teachers.ToList();
 
     }
-
-    public Teacher GetById(int id)
+ 
+    public IEnumerable<ReturnTeacherDTO> GetById(int id)
     {
-        return _applicationDbContext.Teachers.Find(id);
+        var teachers = _applicationDbContext.Teachers.Where(t => t.Id == id)
+            .Select(x => new ReturnTeacherDTO()
+            {
+                Name = x.Name,
+                Subject = x.Subject.Name
+            });
+        return teachers.ToList();
     }
 
     public Teacher Create(TeacherDTO teacherDto)
@@ -46,7 +58,9 @@ public class TeacherRepository : ITeacherRepository
     {
         var existingTeacher = _applicationDbContext.Teachers.Find(teacher.Id);
 
+        
         existingTeacher.Name = teacher.Name;
+        
         
         _applicationDbContext.SaveChanges();
         return existingTeacher;

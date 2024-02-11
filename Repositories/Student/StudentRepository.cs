@@ -1,3 +1,5 @@
+using System.Collections.Immutable;
+
 namespace PostGresAPI.Repositories;
 
 using PostGresAPI.Data;
@@ -34,6 +36,7 @@ public class StudentRepository : IStudentRepository
         {
             Id = (int)generatedId,
             Name = studentDto.Name,
+           
         };
 
         _applicationDbContext.Students.Add(student);
@@ -45,8 +48,16 @@ public class StudentRepository : IStudentRepository
     public Student Update(Student student)
     {
         var existingStudent = _applicationDbContext.Students.Find(student.Id);
-
-        existingStudent.Name = student.Name;
+        
+         
+        if (existingStudent != null)
+        {
+            existingStudent.Name = student.Name;
+            existingStudent.SubjectId = student.SubjectId;
+            
+        
+            _applicationDbContext.SaveChanges();
+        }
         
         _applicationDbContext.SaveChanges();
         return existingStudent;

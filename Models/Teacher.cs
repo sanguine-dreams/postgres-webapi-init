@@ -1,9 +1,8 @@
 namespace PostGresAPI.Models;
 
-public class Teacher
+public class Teacher: BaseEntity<int>
 {
-    public int Id { get; set; }
     public string Name { get; set; }
-    public Subject? SubjectId { get; set; }
-
+    public int? SubjectId { get; set; } = null;
+    public Subject? Subject { get; set; } = null;
 }

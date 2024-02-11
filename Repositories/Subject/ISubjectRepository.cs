@@ -4,9 +4,10 @@ using PostGresAPI.DTOS;
 
 public interface ISubjectRepository
 {
-    IEnumerable<Subject> GetAll();
-    Subject GetById(int id);
-    Subject Create(SubjectDTO studentDto);
-    Subject Update(Subject student);
+    IEnumerable<GetAllSubjectDTO> GetAll();
+    IEnumerable<GetAllSubjectDTO> SearchSubjectTeacher(string? SubjectName, string? TeacherName);
+    IEnumerable<CreateSubjectDTO> GetById(int id);
+    CreateSubjectDTO Create(SubjectDTO studentDto);
+    IEnumerable<GetAllSubjectDTO> Update(Subject student);
     void Delete(int id);
 }

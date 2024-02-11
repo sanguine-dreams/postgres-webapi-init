@@ -14,23 +14,51 @@ public class SubjectRepository : ISubjectRepository
         _applicationDbContext = context;
     }
     
-    public IEnumerable<Subject> GetAll()
+    public IEnumerable<GetAllSubjectDTO> GetAll()
     {
+        var queryableDto = _applicationDbContext.Subjects
+            .Select(x => new GetAllSubjectDTO()
+            {
+                    Name = x.Name,
+                    TaughtBy = x.Teacher.Name,
+            });
         
-        return _applicationDbContext.Subjects.ToList();
+        return queryableDto.ToList();
     }
 
-    public Subject GetById(int id)
+    public  IEnumerable<GetAllSubjectDTO> SearchSubjectTeacher(string SubjectName, string TeacherName)
     {
-        return _applicationDbContext.Subjects.Find(id);
+        var allsubjects = GetAll();
+        var subjects = _applicationDbContext.Subjects
+            .Where(subject => subject.Name.Contains(SubjectName) && subject.Teacher.Name.Contains(TeacherName))
+            .Select(x => new GetAllSubjectDTO()
+            {
+                Name = x.Name,
+                TaughtBy = x.Teacher.Name
+            });
+        
+        return subjects.ToList();
+    }
+
+    public IEnumerable<CreateSubjectDTO> GetById(int id)
+    {
+        var subjects = _applicationDbContext.Subjects.Select(x => new CreateSubjectDTO()
+        {
+            Id = x.Id,
+            Name = x.Name,
+            TaughtBy = x.Teacher.Name
+        }).Where(x => id == x.Id);
+        
+        
+        return subjects.ToList();
         
     }
 
-    public Subject Create(SubjectDTO subjectDTO)
+    public CreateSubjectDTO Create(SubjectDTO subjectDTO)
     {
         long generateId = _applicationDbContext.Subjects.LongCount() + 1;
-        var teacher =  _applicationDbContext.Teachers.Find(subjectDTO.teacherId);
-Console.WriteLine(teacher);
+        var teacher = _applicationDbContext.Teachers.Find(subjectDTO.TeacherId);
+        Console.WriteLine(teacher);
         if (teacher == null)
         {
             throw new Exception("Teacher not found");
@@ -40,26 +68,42 @@ Console.WriteLine(teacher);
         {
             Id = (int)generateId,
             Name = subjectDTO.Name,
+            TeacherId = teacher.Id,
             Teacher = teacher,
         };
 
-        
+        var returnedSubject = new CreateSubjectDTO()
+        {
+            Id = subject.Id,
+            Name = subject.Name,
+            TaughtBy = teacher.Name
+        };
 
-     _applicationDbContext.Subjects.Add(subject);
+    _applicationDbContext.Subjects.Add(subject);
          _applicationDbContext.SaveChanges();
 
-        return subject;
+        return returnedSubject;
     }
 
 
-    public Subject Update(Subject subject)
+    public IEnumerable<GetAllSubjectDTO> Update(Subject subject)
     {
-        var existingSubject = _applicationDbContext.Subjects.Find(subject.Id);
-        
-        existingSubject.Name = subject.Name;
+        var teacher = _applicationDbContext.Teachers.Find(subject.TeacherId);
+        if (teacher == null)
+        {
+            throw new Exception("Teacher not found");
+        }
+
+        var existingSubject = _applicationDbContext.Subjects
+            .Where(s => s.Id== subject.Id)
+            .Select(x => new GetAllSubjectDTO()
+            {
+                Name = subject.Name,
+                TaughtBy = subject.Name,
+            });
 
         _applicationDbContext.SaveChangesAsync();
-        return existingSubject;
+        return existingSubject.ToList();
     }
 
     public void Delete(int id)

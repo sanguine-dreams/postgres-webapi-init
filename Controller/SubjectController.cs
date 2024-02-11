@@ -23,6 +23,14 @@ public class SubjectController : Controller
         return Ok(_subjectRepository.GetAll());
     }
 
+    [HttpGet("{SubjectName}, {TeacherName}")]
+
+    public IActionResult searchTeacherSubject(string SubjectName, string TeacherName)
+    {
+        
+        return Ok(_subjectRepository.SearchSubjectTeacher(SubjectName, TeacherName));
+    }
+
     [HttpGet("{id}")]
     public IActionResult GetById(int id)
     {
