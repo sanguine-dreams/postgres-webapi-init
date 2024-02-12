@@ -17,9 +17,19 @@ public class StudentRepository : IStudentRepository
         _applicationDbContext = context;
     }
 
-    public IEnumerable<Student> GetAll()
+    public List<StudentGetAllOutput> GetAll()
     {
-        return _applicationDbContext.Students.ToList();
+        var students = _applicationDbContext.Students;
+
+        var querableDto = _applicationDbContext
+            .Students.Select(x => new StudentGetAllOutput()
+            {
+                Name = x.Name,
+                SubjectsTaken = x.Subjects.Select(y=>y.Name).ToList()
+                    
+            });
+        
+        return querableDto.ToList();
 
     }
 
@@ -45,21 +55,14 @@ public class StudentRepository : IStudentRepository
         return student;
     }
 
-    public Student Update(Student student)
+    public Student Update(int Id , StudentUpdateInput student)
     {
-        var existingStudent = _applicationDbContext.Students.Find(student.Id);
-        
-         
-        if (existingStudent != null)
-        {
+        var existingStudent = _applicationDbContext.Students.Find(Id);
+ 
             existingStudent.Name = student.Name;
-            existingStudent.SubjectId = student.SubjectId;
-            
-        
+            existingStudent.Subjects = _applicationDbContext.Subjects.Where(x => student.SubjectIds.Any(i => i==x.Id)).ToList();
             _applicationDbContext.SaveChanges();
-        }
         
-        _applicationDbContext.SaveChanges();
         return existingStudent;
     }
 
@@ -68,6 +71,7 @@ public class StudentRepository : IStudentRepository
         var studentToDelete = _applicationDbContext.Students.Find(id);
         if (studentToDelete != null)
         {
+            
             _applicationDbContext.Students.Remove(studentToDelete);
             _applicationDbContext.SaveChanges();
         }

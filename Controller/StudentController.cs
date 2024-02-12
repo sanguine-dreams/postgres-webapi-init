@@ -48,18 +48,12 @@ public class StudentsController : Controller
     }
 
     [HttpPut("{id}")]
-    public IActionResult Update(int id, [FromBody] StudentDTO studentDto)
+    public IActionResult Update(int id, [FromBody] StudentUpdateInput studentDto)
     {
         if (GetById(id) == null)
             return BadRequest("Invalid student data.");
         
-        var student = new Student()
-        {
-            Id = id,
-            Name = studentDto.Name,
-        };
-
-        var updatedStudent = _studentRepository.Update(student);
+        var updatedStudent = _studentRepository.Update(id, studentDto);
 
         if (updatedStudent == null)
             return NotFound(); 
