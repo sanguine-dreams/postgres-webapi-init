@@ -27,7 +27,7 @@ public class TeacherRepository : ITeacherRepository
 
     }
  
-    public IEnumerable<ReturnTeacherDTO> GetById(int id)
+    public IEnumerable<ReturnTeacherDTO> GetById(Guid id)
     {
         var teachers = _applicationDbContext.Teachers.Where(t => t.Id == id)
             .Select(x => new ReturnTeacherDTO()
@@ -40,11 +40,9 @@ public class TeacherRepository : ITeacherRepository
 
     public Teacher Create(TeacherDTO teacherDto)
     {
-        long generatedId = _applicationDbContext.Teachers.LongCount() + 1;
 
         var teacher = new Teacher()
         {
-            Id = (int)generatedId,
             Name = teacherDto.Name,
         };
 
@@ -66,7 +64,7 @@ public class TeacherRepository : ITeacherRepository
         return existingTeacher;
     }
 
-    public void Delete(int id)
+    public void Delete(Guid id)
     {
         var teacherToDelete = _applicationDbContext.Teachers.Find(id);
         if (teacherToDelete != null)

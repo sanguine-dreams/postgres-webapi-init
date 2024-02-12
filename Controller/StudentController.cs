@@ -26,7 +26,7 @@ public class StudentsController : Controller
     }
 
     [HttpGet("{id}")]
-    public IActionResult GetById(int id)
+    public IActionResult GetById(Guid id)
     {
         var studentId = _studentRepository.GetById(id);
         if (studentId == null)
@@ -48,7 +48,7 @@ public class StudentsController : Controller
     }
 
     [HttpPut("{id}")]
-    public IActionResult Update(int id, [FromBody] StudentUpdateInput studentDto)
+    public IActionResult Update(Guid id, [FromBody] StudentUpdateInput studentDto)
     {
         if (GetById(id) == null)
             return BadRequest("Invalid student data.");
@@ -62,7 +62,7 @@ public class StudentsController : Controller
     }
 
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
+    public IActionResult Delete(Guid id)
     {
     _studentRepository.Delete(id);
 

@@ -5,8 +5,8 @@ namespace PostGresAPI.DTOS;
 public class SubjectDTO
 {
     public string Name { get; set; }
-    public int? TeacherId  { get; set; }
+    public Guid? TeacherId  { get; set; }
     
-    public int? StudentId { get; set; } 
+    public Guid? StudentId { get; set; } 
 
 }

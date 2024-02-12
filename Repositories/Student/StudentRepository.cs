@@ -33,18 +33,16 @@ public class StudentRepository : IStudentRepository
 
     }
 
-    public Student GetById(int id)
+    public Student GetById(Guid id)
     {
         return _applicationDbContext.Students.Find(id);
     }
 
     public Student Create(StudentDTO studentDto)
     {
-        long generatedId = _applicationDbContext.Students.LongCount() + 1;
 
         var student = new Student()
         {
-            Id = (int)generatedId,
             Name = studentDto.Name,
            
         };
@@ -55,7 +53,7 @@ public class StudentRepository : IStudentRepository
         return student;
     }
 
-    public Student Update(int Id , StudentUpdateInput student)
+    public Student Update(Guid Id , StudentUpdateInput student)
     {
         var existingStudent = _applicationDbContext.Students.Find(Id);
  
@@ -66,7 +64,7 @@ public class StudentRepository : IStudentRepository
         return existingStudent;
     }
 
-    public void Delete(int id)
+    public void Delete(Guid id)
     {
         var studentToDelete = _applicationDbContext.Students.Find(id);
         if (studentToDelete != null)

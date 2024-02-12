@@ -6,8 +6,8 @@ public interface ISubjectRepository
 {
     IEnumerable<GetAllSubjectDTO> GetAll();
     IEnumerable<GetAllSubjectDTO> SearchSubjectTeacher(string? SubjectName, string? TeacherName);
-    IEnumerable<CreateSubjectDTO> GetById(int id);
+    IEnumerable<CreateSubjectDTO> GetById(Guid id);
     CreateSubjectDTO Create(SubjectDTO studentDto);
     IEnumerable<GetAllSubjectDTO> Update(Subject student);
-    void Delete(int id);
+    void Delete(Guid id);
 }

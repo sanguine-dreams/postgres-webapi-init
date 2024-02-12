@@ -40,7 +40,7 @@ public class SubjectRepository : ISubjectRepository
         return subjects.ToList();
     }
 
-    public IEnumerable<CreateSubjectDTO> GetById(int id)
+    public IEnumerable<CreateSubjectDTO> GetById(Guid id)
     {
         var subjects = _applicationDbContext.Subjects.Select(x => new CreateSubjectDTO()
         {
@@ -56,7 +56,6 @@ public class SubjectRepository : ISubjectRepository
 
     public CreateSubjectDTO Create(SubjectDTO subjectDTO)
     {
-        long generateId = _applicationDbContext.Subjects.LongCount() + 1;
         var teacher = _applicationDbContext.Teachers.Find(subjectDTO.TeacherId);
         Console.WriteLine(teacher);
         if (teacher == null)
@@ -66,7 +65,7 @@ public class SubjectRepository : ISubjectRepository
 
         var subject = new Subject()
         {
-            Id = (int)generateId,
+            
             Name = subjectDTO.Name,
             TeacherId = teacher.Id,
             Teacher = teacher,
@@ -106,7 +105,7 @@ public class SubjectRepository : ISubjectRepository
         return existingSubject.ToList();
     }
 
-    public void Delete(int id)
+    public void Delete(Guid id)
     {
         var subjectToDelete = _applicationDbContext.Subjects.Find(id);
         if (subjectToDelete != null)

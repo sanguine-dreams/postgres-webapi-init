@@ -12,8 +12,8 @@ using PostGresAPI.Data;
 namespace PostGresAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240210165406_StudentSubject")]
-    partial class StudentSubject
+    [Migration("20240212103843_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -27,11 +27,9 @@ namespace PostGresAPI.Migrations
 
             modelBuilder.Entity("PostGresAPI.Models.Student", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("timestamp with time zone");
@@ -50,26 +48,30 @@ namespace PostGresAPI.Migrations
 
             modelBuilder.Entity("PostGresAPI.Models.StudentSubject", b =>
                 {
+                    b.Property<Guid>("StudentId1")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("SubjectsId")
+                        .HasColumnType("uuid");
+
                     b.Property<int>("StudentId")
                         .HasColumnType("integer");
 
                     b.Property<int>("SubjectId")
                         .HasColumnType("integer");
 
-                    b.HasKey("StudentId", "SubjectId");
+                    b.HasKey("StudentId1", "SubjectsId");
 
-                    b.HasIndex("SubjectId");
+                    b.HasIndex("SubjectsId");
 
                     b.ToTable("StudentSubject");
                 });
 
             modelBuilder.Entity("PostGresAPI.Models.Subject", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("timestamp with time zone");
@@ -81,8 +83,8 @@ namespace PostGresAPI.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("TeacherId")
-                        .HasColumnType("integer");
+                    b.Property<Guid>("TeacherId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -94,11 +96,9 @@ namespace PostGresAPI.Migrations
 
             modelBuilder.Entity("PostGresAPI.Models.Teacher", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                        .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreationTime")
                         .HasColumnType("timestamp with time zone");
@@ -123,13 +123,13 @@ namespace PostGresAPI.Migrations
                 {
                     b.HasOne("PostGresAPI.Models.Student", null)
                         .WithMany()
-                        .HasForeignKey("StudentId")
+                        .HasForeignKey("StudentId1")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("PostGresAPI.Models.Subject", null)
                         .WithMany()
-                        .HasForeignKey("SubjectId")
+                        .HasForeignKey("SubjectsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -138,7 +138,9 @@ namespace PostGresAPI.Migrations
                 {
                     b.HasOne("PostGresAPI.Models.Teacher", "Teacher")
                         .WithOne("Subject")
-                        .HasForeignKey("PostGresAPI.Models.Subject", "TeacherId");
+                        .HasForeignKey("PostGresAPI.Models.Subject", "TeacherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Teacher");
                 });

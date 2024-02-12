@@ -5,8 +5,8 @@ using PostGresAPI.DTOS;
 public interface ITeacherRepository
 {
     IEnumerable<ReturnTeacherDTO> GetAll();
-    IEnumerable<ReturnTeacherDTO> GetById(int id);
+    IEnumerable<ReturnTeacherDTO> GetById(Guid id);
     Teacher Create(TeacherDTO teacherDto);
     Teacher Update(Teacher teacher);
-    void Delete(int id);
+    void Delete(Guid id);
 }

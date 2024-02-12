@@ -32,7 +32,7 @@ public class SubjectController : Controller
     }
 
     [HttpGet("{id}")]
-    public IActionResult GetById(int id)
+    public IActionResult GetById(Guid id)
     {
         var subjectId = _subjectRepository.GetById((id));
         if (subjectId == null)
@@ -51,7 +51,7 @@ public class SubjectController : Controller
     }
 
     [HttpPut("{id}")]
-    public IActionResult Update(int id, [FromBody] SubjectDTO subjectDto)
+    public IActionResult Update(Guid id, [FromBody] SubjectDTO subjectDto)
     {
         if (GetById(id) == null)
             return BadRequest(error: "Invalid Subject data.");
@@ -68,7 +68,7 @@ public class SubjectController : Controller
     }
 
     [HttpDelete("{id}")]
-    public IActionResult Delete(int id)
+    public IActionResult Delete(Guid id)
     {
         _subjectRepository.Delete(id);
         return NoContent();
