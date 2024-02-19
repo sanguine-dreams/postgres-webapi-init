@@ -12,8 +12,8 @@ using PostGresAPI.Data;
 namespace PostGresAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240212103843_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20240217110404_InitialMigrations")]
+    partial class InitialMigrations
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -83,7 +83,7 @@ namespace PostGresAPI.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("TeacherId")
+                    b.Property<Guid?>("TeacherId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
@@ -111,8 +111,8 @@ namespace PostGresAPI.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
-                    b.Property<int?>("SubjectId")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("SubjectId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -138,9 +138,7 @@ namespace PostGresAPI.Migrations
                 {
                     b.HasOne("PostGresAPI.Models.Teacher", "Teacher")
                         .WithOne("Subject")
-                        .HasForeignKey("PostGresAPI.Models.Subject", "TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PostGresAPI.Models.Subject", "TeacherId");
 
                     b.Navigation("Teacher");
                 });

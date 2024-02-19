@@ -18,9 +18,9 @@ public class SubjectController : Controller
     }
 
     [HttpGet]
-    public IActionResult GetAll()
+    public IActionResult GetAll(int? skip = null, int? take = null)
     {
-        return Ok(_subjectRepository.GetAll());
+        return Ok(_subjectRepository.GetAll(skip, take));
     }
 
     [HttpGet("{SubjectName}, {TeacherName}")]

@@ -80,7 +80,7 @@ namespace PostGresAPI.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("TeacherId")
+                    b.Property<Guid?>("TeacherId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
@@ -108,8 +108,8 @@ namespace PostGresAPI.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
-                    b.Property<int?>("SubjectId")
-                        .HasColumnType("integer");
+                    b.Property<Guid?>("SubjectId")
+                        .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
@@ -135,9 +135,7 @@ namespace PostGresAPI.Migrations
                 {
                     b.HasOne("PostGresAPI.Models.Teacher", "Teacher")
                         .WithOne("Subject")
-                        .HasForeignKey("PostGresAPI.Models.Subject", "TeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PostGresAPI.Models.Subject", "TeacherId");
 
                     b.Navigation("Teacher");
                 });

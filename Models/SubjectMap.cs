@@ -11,6 +11,7 @@ public class SubjectMap: IEntityTypeConfiguration<Subject>
         
         builder.HasOne(t => t.Teacher)
             .WithOne(t => t.Subject)
-            .HasForeignKey<Teacher>(x => x.SubjectId);
+            .HasForeignKey<Teacher>(x => x.SubjectId)
+            ;
     }
 }

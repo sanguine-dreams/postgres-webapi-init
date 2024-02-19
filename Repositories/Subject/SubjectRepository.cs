@@ -14,16 +14,38 @@ public class SubjectRepository : ISubjectRepository
         _applicationDbContext = context;
     }
     
-    public IEnumerable<GetAllSubjectDTO> GetAll()
+    public GetReturn<GetAllSubjectDTO> GetAll(int? skip = null, int? take = null)
     {
-        var queryableDto = _applicationDbContext.Subjects
-            .Select(x => new GetAllSubjectDTO()
+        var query = _applicationDbContext.Subjects.AsQueryable();
+        if (skip == null || take == null)
+        {
+            query = query.Skip(1).Take(10);
+        }
+
+        if (skip.HasValue)
+        {
+            query = query.Skip(skip.Value);
+        }
+
+        if (take.HasValue)
+        {
+            query = query.Take(take.Value);
+        }
+        
+      var subjectsAll = query.Select(x => new GetAllSubjectDTO()
             {
                     Name = x.Name,
                     TaughtBy = x.Teacher.Name,
-            });
+            }).ToList();
+
+            var returned =
+                new GetReturn<GetAllSubjectDTO>()
+            {
+                Items = subjectsAll,
+                TotalCount = query.Count()
+            };
         
-        return queryableDto.ToList();
+        return returned;
     }
 
     public  IEnumerable<GetAllSubjectDTO> SearchSubjectTeacher(string SubjectName, string TeacherName)
@@ -54,34 +76,21 @@ public class SubjectRepository : ISubjectRepository
         
     }
 
-    public CreateSubjectDTO Create(SubjectDTO subjectDTO)
+    public Subject Create(SubjectDTO subjectDTO)
     {
-        var teacher = _applicationDbContext.Teachers.Find(subjectDTO.TeacherId);
-        Console.WriteLine(teacher);
-        if (teacher == null)
-        {
-            throw new Exception("Teacher not found");
-        }
+      
 
         var subject = new Subject()
         {
             
             Name = subjectDTO.Name,
-            TeacherId = teacher.Id,
-            Teacher = teacher,
-        };
-
-        var returnedSubject = new CreateSubjectDTO()
-        {
-            Id = subject.Id,
-            Name = subject.Name,
-            TaughtBy = teacher.Name
+            
         };
 
     _applicationDbContext.Subjects.Add(subject);
          _applicationDbContext.SaveChanges();
 
-        return returnedSubject;
+        return subject;
     }
 
 

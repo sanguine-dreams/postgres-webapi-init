@@ -17,20 +17,39 @@ public class StudentRepository : IStudentRepository
         _applicationDbContext = context;
     }
 
-    public List<StudentGetAllOutput> GetAll()
+    public GetReturn<StudentGetAllOutput> GetAll(int? skip, int? take)
     {
-        var students = _applicationDbContext.Students;
+        var query = _applicationDbContext.Students.AsQueryable();
 
-        var querableDto = _applicationDbContext
-            .Students.Select(x => new StudentGetAllOutput()
+        if (skip == null || take == null)
+        {
+            query = query.Skip(1).Take(10);
+        }
+
+    if (skip.HasValue)
+        {
+            query = query.Skip(skip.Value);
+        }
+
+        if (take.HasValue)
+        {
+            query = query.Take(take.Value);
+        }
+        var studentsDto = query.Select(x => new StudentGetAllOutput()
+        {
+            Name = x.Name,
+            SubjectsTaken = x.Subjects.Select(y => y.Name).ToList()
+        }).ToList();
+
+        var returned = 
+            new GetReturn<StudentGetAllOutput>()
             {
-                Name = x.Name,
-                SubjectsTaken = x.Subjects.Select(y=>y.Name).ToList()
-                    
-            });
-        
-        return querableDto.ToList();
+                Items = studentsDto,
+                TotalCount = studentsDto.Count
 
+            };
+
+        return returned;
     }
 
     public Student GetById(Guid id)

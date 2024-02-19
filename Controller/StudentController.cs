@@ -20,9 +20,9 @@ public class StudentsController : Controller
 
 
     [HttpGet]
-    public IActionResult GetAll()
+    public IActionResult GetAll(int? skip = null, int? take = null)
     {
-        return Ok(_studentRepository.GetAll());
+        return Ok(_studentRepository.GetAll(skip, take));
     }
 
     [HttpGet("{id}")]
